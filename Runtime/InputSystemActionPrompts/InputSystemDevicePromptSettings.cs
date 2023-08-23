@@ -45,7 +45,15 @@ namespace InputSystemActionPrompts
         /// </summary>
         [Tooltip("Formatter used to add additional Rich Text formatting to all text return from InputDevicePromptSystem.InsertPromptSprites and in turn PromptText. Example <size=200%>{SPRITE}</size>")]
         public string PromptSpriteFormatter = "{SPRITE}";
-        
+        /// <summary>
+        /// Defines the behavior of <see cref="PromptText"/> and <see cref="PromptIcon"/> when a sprite is not found.
+        /// <para>Default = Both components will execute their default behavior when a sprite is not found.</para>
+        /// <para>SuppressDisplay = Whenever no sprite is found for [Example/Prompt] will replace it with "" and PromptIcon will disable gameobject it is attached to.</para>
+        /// </summary>
+        [Tooltip("Defines the behavior of PromptText and PromptIcon when a sprite is not found.\r" +
+                 "Default = Both components will execute their default behavior when a sprite is not found.\r" +
+                 "SuppressDisplay = Whenever no sprite is found for [Example/Prompt] PromptText will replace it with nothing and PromptIcon will disable gameobject it is attached to.")]
+        public SpriteNotFoundBehaviorEnum SpriteNotFoundBehavior;
         public const string SettingsDataFile = "InputSystemDevicePromptSettings";
         
         public static InputSystemDevicePromptSettings GetSettings()
@@ -58,5 +66,17 @@ namespace InputSystemActionPrompts
             return settings;
         }
 
+        public enum SpriteNotFoundBehaviorEnum
+        {
+            ///<summary>
+            /// Let each component handle what happens individually if a sprite is not found.
+            ///</summary>    
+            Default,
+            ///<summary>
+            /// In the case of PromptText wherever [Example/Prompt] comes up short display nothing.
+            /// In the case of PromptIcon wherever [Example/Prompt] comes up short disable Gameobject or Image component.
+            ///</summary>
+            SuppressDisplay
+        }
     }
 }
