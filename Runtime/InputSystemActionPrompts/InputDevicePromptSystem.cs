@@ -128,7 +128,21 @@ namespace InputSystemActionPrompts
             foreach (var tag in foundTags)
             {
                 var replacementTagText = GetActionPathBindingTextSpriteTags(tag);
-                
+                //TODO not great, but allows us to determine if we found a binding or not given that no binding returns a error message rather than null
+                if (!replacementTagText.StartsWith("<sprite"))
+                {
+                    switch (s_Settings.SpriteNotFoundBehavior)
+                    {
+                        //do nothing in default case (maybe could remove this)
+                        case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.Default:
+                            break;
+                        //skip to next tag in this case to avoid adding any unnecessary promptSpriteFormatter text to output
+                        case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.SuppressDisplay:
+                            continue;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 //if PromptSpriteFormatter is empty for some reason return the text as if formatter was {SPRITE} (normally)
                 var promptSpriteFormatter = s_Settings.PromptSpriteFormatter == "" ? "{SPRITE}" : s_Settings.PromptSpriteFormatter;
                 //PromptSpriteFormatter in settings uses {SPRITE} as a placeholder for the sprite, convert it to {0} for string.Format
