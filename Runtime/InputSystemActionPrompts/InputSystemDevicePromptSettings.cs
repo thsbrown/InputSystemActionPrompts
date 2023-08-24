@@ -48,11 +48,11 @@ namespace InputSystemActionPrompts
         /// <summary>
         /// Defines the behavior of <see cref="PromptText"/> and <see cref="PromptIcon"/> when a sprite is not found.
         /// <para>Default = Both components will execute their default behavior when a sprite is not found.</para>
-        /// <para>SuppressDisplay = Whenever no sprite is found for [Example/Prompt] will replace it with "" and PromptIcon will disable gameobject it is attached to.</para>
+        /// <para>SuppressDisplay = Whenever no sprite is found for [Example/Prompt] will replace it with empty string and PromptIcon will disable gameobject it is attached to.</para>
         /// </summary>
         [Tooltip("Defines the behavior of PromptText and PromptIcon when a sprite is not found.\r" +
                  "Default = Both components will execute their default behavior when a sprite is not found.\r" +
-                 "SuppressDisplay = Whenever no sprite is found for [Example/Prompt] PromptText will replace it with nothing and PromptIcon will disable gameobject it is attached to.")]
+                 "SuppressDisplay = Whenever no sprite is found for [Example/Prompt] PromptText will replace it with empty string and PromptIcon will disable gameobject it is attached to.")]
         public SpriteNotFoundBehaviorEnum SpriteNotFoundBehavior;
         public const string SettingsDataFile = "InputSystemDevicePromptSettings";
         
