@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -153,6 +153,13 @@ namespace InputSystemActionPrompts
                 replacedText = replacedText.Replace($"{s_Settings.OpenTag}{tag}{s_Settings.CloseTag}", replacementTagText);
             }
 
+            //SuppressDisplay can leave us in a position where we have leading or trailing spaces ("[Example/Prompt] Cancel" => " Cancel") so trim them out
+            //TODO reconsider if this is a good idea later
+            if (s_Settings.SpriteNotFoundBehavior ==
+                InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.SuppressDisplay)
+            {
+                replacedText = replacedText.Trim();
+            }
             return replacedText;
         }
         
