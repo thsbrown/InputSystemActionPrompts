@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -46,9 +47,28 @@ namespace InputSystemActionPrompts
         /// </summary>
         private void RefreshIcon()
         {
-            var sourceSprite=InputDevicePromptSystem.GetActionPathBindingSprite(m_Action);
+            var sourceSprite = InputDevicePromptSystem.GetActionPathBindingSprite(m_Action);
             m_Image.sprite = sourceSprite;
-            if (sourceSprite == null) return;
+            switch (InputSystemDevicePromptSettings.GetSettings().SpriteNotFoundBehavior)
+            {
+                case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.Default:
+                    if (sourceSprite == null)
+                    {
+                        return;
+                    }
+                    break;
+                case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.SuppressDisplay:
+                    //if we have a sprite enable the gameobject just in case it was off, if we don't disable it
+                    if (sourceSprite == null)
+                    {
+                        gameObject.SetActive(false);
+                        return;
+                    }
+                    gameObject.SetActive(true);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             m_Image.SetNativeSize();
         }
     }
