@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -136,8 +136,9 @@ namespace InputSystemActionPrompts
                         //do nothing in default case (maybe could remove this)
                         case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.Default:
                             break;
-                        //skip to next tag in this case to avoid adding any unnecessary promptSpriteFormatter text to output
+                        //convert [Example/Prompt] to empty string
                         case InputSystemDevicePromptSettings.SpriteNotFoundBehaviorEnum.SuppressDisplay:
+                            replacedText = replacedText.Replace($"{s_Settings.OpenTag}{tag}{s_Settings.CloseTag}", "");
                             continue;
                         default:
                             throw new ArgumentOutOfRangeException();
