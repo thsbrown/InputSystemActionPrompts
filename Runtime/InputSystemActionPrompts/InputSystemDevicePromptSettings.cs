@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -44,7 +44,8 @@ namespace InputSystemActionPrompts
         /// </example>
         /// </summary>
         [Tooltip("Formatter used to add additional Rich Text formatting to all text return from InputDevicePromptSystem.InsertPromptSprites and in turn PromptText. Example <size=200%>{SPRITE}</size>")]
-        public string PromptSpriteFormatter = "{SPRITE}";
+        public string PromptSpriteFormatter = PromptSpriteFormatterSpritePlaceholder;
+        
         /// <summary>
         /// Defines the behavior of <see cref="PromptText"/> and <see cref="PromptIcon"/> when a sprite is not found.
         /// <para>Default = Both components will execute their default behavior when a sprite is not found.</para>
@@ -54,6 +55,11 @@ namespace InputSystemActionPrompts
                  "Default = Both components will execute their default behavior when a sprite is not found.\r" +
                  "SuppressDisplay = Whenever no sprite is found for [Example/Prompt] PromptText will replace it with empty string and PromptIcon will disable gameobject it is attached to.")]
         public SpriteNotFoundBehaviorEnum SpriteNotFoundBehavior;
+        
+        /// <summary>
+        /// Placeholder used to denote where a sprite should be inserted in the <see cref="InputSystemDevicePromptSettings.PromptSpriteFormatter"/>
+        /// </summary>
+        public const string PromptSpriteFormatterSpritePlaceholder = "{SPRITE}";
         public const string SettingsDataFile = "InputSystemDevicePromptSettings";
         
         public static InputSystemDevicePromptSettings GetSettings()
