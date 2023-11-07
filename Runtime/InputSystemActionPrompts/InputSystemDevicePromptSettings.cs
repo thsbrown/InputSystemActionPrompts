@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace InputSystemActionPrompts
 {
@@ -55,6 +56,13 @@ namespace InputSystemActionPrompts
                  "Default = Both components will execute their default behavior when a sprite is not found.\r" +
                  "SuppressDisplay = Whenever no sprite is found for [Example/Prompt] PromptText will replace it with empty string and PromptIcon will disable gameobject it is attached to.")]
         public SpriteNotFoundBehaviorEnum SpriteNotFoundBehavior;
+        
+        /// <summary>
+        /// The amount a gamepad stick must be moved to be considered a device detection event. 
+        /// </summary>
+        [Range(0,1)]
+        [Tooltip("The amount a gamepad stick must be moved to be considered a device detection event.")]
+        public float gamepadStickDeviceDetectionThreshold = 0.1f;
         
         /// <summary>
         /// Placeholder used to denote where a sprite should be inserted in the <see cref="InputSystemDevicePromptSettings.PromptSpriteFormatter"/>
