@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.Serialization;
 
 namespace InputSystemActionPrompts
 {
@@ -119,7 +120,7 @@ namespace InputSystemActionPrompts
         /// </summary>
         /// <param name="inputText"></param>
         /// <returns></returns>
-        public static string InsertPromptSprites(string inputText)
+        public static string InsertPromptSprites(string inputText, BindingsFilter bindingsFilter)
         {
             if (!s_Initialised) Initialise();
             if (!s_Initialised) return "InputSystemDevicePrompt Settings missing - please create using menu item 'Window/Input System Device Prompts/Create Settings'";
@@ -183,7 +184,7 @@ namespace InputSystemActionPrompts
         /// </summary>
         /// <param name="inputTag"></param>
         /// <returns></returns>
-        private static string GetActionPathBindingTextSpriteTags(string inputTag)
+        private static string GetActionPathBindingTextSpriteTags(string inputTag, BindingsFilter bindingsFilter = null)
         {
             if (s_ActiveDevice==null) return "NO_ACTIVE_DEVICE";
             var activeDeviceName = s_ActiveDevice.name;
@@ -200,7 +201,7 @@ namespace InputSystemActionPrompts
                 return $"MISSING_ACTION {lowerCaseTag}";
             }
 
-            var (validDevice, matchingPrompt) = GetActionPathBindingPromptEntries(inputTag);
+            var (validDevice, matchingPrompt) = GetActionPathBindingPromptEntries(inputTag, bindingsFilter);
            
             if (matchingPrompt==null || matchingPrompt.Count==0)
             {
@@ -220,7 +221,8 @@ namespace InputSystemActionPrompts
         /// </summary>
         /// <param name="inputTag"></param>
         /// <returns></returns>
-        private static (InputDevicePromptData,List<ActionBindingPromptEntry>) GetActionPathBindingPromptEntries(string inputTag)
+        private static (InputDevicePromptData, List<ActionBindingPromptEntry>) GetActionPathBindingPromptEntries(
+            string inputTag, BindingsFilter bindingsFilter = null)
         {
             if (s_ActiveDevice == null) return (null,null);
             if (!s_DeviceDataBindingMap.ContainsKey(s_ActiveDevice.name)) return (null,null);
@@ -234,6 +236,26 @@ namespace InputSystemActionPrompts
             
             foreach (var actionBinding in actionBindings)
             {
+                if (bindingsFilter != null && bindingsFilter.filterType != BindingsFilterType.None)
+                {
+                    switch (bindingsFilter.filterType)
+                    {
+                        case BindingsFilterType.Inclusive:
+                            if (!bindingsFilter.bindingPath.Contains(actionBinding.BindingPath))
+                            {
+                                continue;
+                            }
+                            break;
+                        case BindingsFilterType.Exclusive:
+                            if (bindingsFilter.bindingPath.Contains(actionBinding.BindingPath))
+                            {
+                                continue;
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 //Debug.Log($"Checking binding '{actionBinding}' on device {validDevice.name}");
                 var usage = GetUsageFromBindingPath(actionBinding.BindingPath);
                 if (string.IsNullOrEmpty(usage))
@@ -465,6 +487,29 @@ namespace InputSystemActionPrompts
 
             s_ActiveDevice = inputDevice;
             OnActiveDeviceChanged.Invoke(s_ActiveDevice);
+        }
+
+        [Serializable]
+        public class BindingsFilter
+        {
+            public BindingsFilterType filterType;
+            public List<string> bindingPath;
+        }
+        
+        public enum BindingsFilterType
+        {
+            /// <summary>
+            /// Bindings will not be filtered.
+            /// </summary>
+            None,
+            /// <summary>
+            /// Only items specified will be included.
+            /// </summary>
+            Inclusive,
+            /// <summary>
+            /// Only items specified will be excluded.
+            /// </summary>
+            Exclusive
         }
 
     }
