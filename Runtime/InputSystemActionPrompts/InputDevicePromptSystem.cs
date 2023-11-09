@@ -505,10 +505,13 @@ namespace InputSystemActionPrompts
         public class BindingsFilter
         {
             public BindingsFilterType filterType;
-            
+
+#if ODIN_INSPECTOR
             [Sirenix.OdinInspector.ValueDropdown("GetAllBindingPaths")]
+#endif
             public List<string> bindingPath;
             
+#if ODIN_INSPECTOR            
             private Sirenix.OdinInspector.ValueDropdownList<string> GetAllBindingPaths()
             {
                 var settings = InputSystemDevicePromptSettings.GetSettings();
@@ -535,6 +538,7 @@ namespace InputSystemActionPrompts
                 }
                 return bindingPaths;
             }
+#endif
         }
         
         public enum BindingsFilterType
