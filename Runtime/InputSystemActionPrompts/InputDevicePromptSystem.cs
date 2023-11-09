@@ -129,7 +129,7 @@ namespace InputSystemActionPrompts
             var replacedText = inputText;
             foreach (var tag in foundTags)
             {
-                var replacementTagText = GetActionPathBindingTextSpriteTags(tag);
+                var replacementTagText = GetActionPathBindingTextSpriteTags(tag, bindingsFilter);
                 //TODO not great, but allows us to determine if we found a binding or not given that no binding returns a error message rather than null
                 if (!replacementTagText.StartsWith("<sprite"))
                 {
