@@ -505,7 +505,36 @@ namespace InputSystemActionPrompts
         public class BindingsFilter
         {
             public BindingsFilterType filterType;
+            
+            [Sirenix.OdinInspector.ValueDropdown("GetAllBindingPaths")]
             public List<string> bindingPath;
+            
+            private Sirenix.OdinInspector.ValueDropdownList<string> GetAllBindingPaths()
+            {
+                var settings = InputSystemDevicePromptSettings.GetSettings();
+                var bindingPaths = new Sirenix.OdinInspector.ValueDropdownList<string>();
+                // If actionAsset is null, return empty list
+                if (settings.InputActionAssets == null || settings.InputActionAssets.Count <= 0)
+                {
+                    return bindingPaths;
+                }
+
+                foreach (var inputActionAsset in settings.InputActionAssets)
+                {
+                    foreach (var map in inputActionAsset.actionMaps)
+                    {
+                        foreach (var binding in map.bindings)
+                        {
+                            // Exclude bindings without a valid path
+                            if (!string.IsNullOrEmpty(binding.path))
+                            {
+                                bindingPaths.Add(map.name + "/" + binding.action + "/" + binding.path, binding.path);
+                            }
+                        }
+                    }
+                }
+                return bindingPaths;
+            }
         }
         
         public enum BindingsFilterType
