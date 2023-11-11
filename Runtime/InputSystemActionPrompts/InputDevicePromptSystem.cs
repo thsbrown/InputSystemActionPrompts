@@ -57,7 +57,7 @@ namespace InputSystemActionPrompts
         /// <summary>
         /// Currently active device
         /// </summary>
-        private static InputDevice s_ActiveDevice;
+        public static InputDevice ActiveDevice;
         
         /// <summary>
         /// Delegate for when the active device changes
@@ -117,13 +117,13 @@ namespace InputSystemActionPrompts
         private static void OnDeviceChange(InputDevice device, InputDeviceChange change)
         {
             // If the active device has been disconnected, revert to default device
-            if (device != s_ActiveDevice) return;
+            if (device != ActiveDevice) return;
             
             if (change is InputDeviceChange.Disconnected or InputDeviceChange.Removed)
             {
                 FindDefaultDevice();
                 // Notify change
-                OnActiveDeviceChanged.Invoke(s_ActiveDevice);
+                OnActiveDeviceChanged.Invoke(ActiveDevice);
             }
         }
 
@@ -198,8 +198,8 @@ namespace InputSystemActionPrompts
         /// <returns></returns>
         private static string GetActionPathBindingTextSpriteTags(string inputTag, BindingsFilter bindingsFilter = null)
         {
-            if (s_ActiveDevice==null) return "NO_ACTIVE_DEVICE";
-            var activeDeviceName = s_ActiveDevice.name;
+            if (ActiveDevice==null) return "NO_ACTIVE_DEVICE";
+            var activeDeviceName = ActiveDevice.name;
             
             if (!s_DeviceDataBindingMap.ContainsKey(activeDeviceName))
             {
@@ -236,14 +236,14 @@ namespace InputSystemActionPrompts
         private static (InputDevicePromptData, List<ActionBindingPromptEntry>) GetActionPathBindingPromptEntries(
             string inputTag, BindingsFilter bindingsFilter = null)
         {
-            if (s_ActiveDevice == null) return (null,null);
-            if (!s_DeviceDataBindingMap.ContainsKey(s_ActiveDevice.name)) return (null,null);
+            if (ActiveDevice == null) return (null,null);
+            if (!s_DeviceDataBindingMap.ContainsKey(ActiveDevice.name)) return (null,null);
             var lowerCaseTag = inputTag.ToLower();
 
             if (!s_ActionBindingMap.ContainsKey(lowerCaseTag)) return (null,null);
             
             var validEntries = new List<ActionBindingPromptEntry>();
-            var validDevice = s_DeviceDataBindingMap[s_ActiveDevice.name];
+            var validDevice = s_DeviceDataBindingMap[ActiveDevice.name];
             var actionBindings=s_ActionBindingMap[lowerCaseTag];
             
             foreach (var actionBinding in actionBindings)
@@ -290,8 +290,8 @@ namespace InputSystemActionPrompts
                     var matchingUsageFound = false;
                     var deviceList = new List<InputDevice>(InputSystem.devices);
                     // Move active device to front of queue
-                    deviceList.Remove(s_ActiveDevice);
-                    deviceList.Insert(0, s_ActiveDevice);
+                    deviceList.Remove(ActiveDevice);
+                    deviceList.Insert(0, ActiveDevice);
 
                     for (var i = 0; i < deviceList.Count && !matchingUsageFound; i++)
                     {
@@ -368,7 +368,7 @@ namespace InputSystemActionPrompts
             {
                 foreach (var device in InputSystem.devices.Where(device => DeviceMatchesType(device, deviceType)))
                 {
-                    s_ActiveDevice = device;
+                    ActiveDevice = device;
                     return;
                 }
             }
@@ -492,13 +492,13 @@ namespace InputSystemActionPrompts
             }
 
             //active device is already set to this device, so ignore it
-            if (s_ActiveDevice == inputDevice)
+            if (ActiveDevice == inputDevice)
             {
                 return;
             }
 
-            s_ActiveDevice = inputDevice;
-            OnActiveDeviceChanged.Invoke(s_ActiveDevice);
+            ActiveDevice = inputDevice;
+            OnActiveDeviceChanged.Invoke(ActiveDevice);
         }
 
         [Serializable]
