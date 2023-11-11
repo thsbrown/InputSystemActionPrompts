@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,7 +8,10 @@ namespace InputSystemActionPrompts
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class PromptText : MonoBehaviour
     {
-        [SerializeField] private InputActionAsset m_InputActionAsset;
+        [SerializeField]
+        private InputActionAsset m_InputActionAsset;
+        [SerializeField]
+        private InputDevicePromptSystem.BindingsFilter m_bindingsFilter;
         
         /// <summary>
         /// Cached TextMeshProUGUI component that we'll apply the prompt sprites to
@@ -52,7 +55,8 @@ namespace InputSystemActionPrompts
         private void RefreshText()
         {
             if (m_TextField == null) return;
-            m_TextField.text = InputDevicePromptSystem.InsertPromptSprites(m_OriginalText);
+            m_TextField.text = InputDevicePromptSystem.InsertPromptSprites(m_OriginalText, m_bindingsFilter);
         }
+
     }
 }
