@@ -36,6 +36,16 @@ namespace InputSystemActionPrompts
             // Remove listener
             InputDevicePromptSystem.OnActiveDeviceChanged-= DeviceChanged;
         }
+        
+        /// <summary>
+        /// Updates the text field the promp field is utilizing, ensuring prompt icons work and update appropriately as well. 
+        /// </summary>
+        /// <param name="text">The new text that will be applied to the text field. Should retain the action binding text such as [UI/Submit]</param>
+        public void UpdateText(string text)
+        {
+            m_OriginalText = text;
+            RefreshText();
+        }
 
         /// <summary>
         /// Called when active input device changed
